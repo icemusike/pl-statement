@@ -1,114 +1,69 @@
 from http.server import BaseHTTPRequestHandler
-import base64
 import json
-import sys
-import os
-import traceback # For detailed error logging
+import traceback
 
-print("--- api/parse.py module loaded (v3-vercel) ---")
-
-# Ensure the project root (parent of 'api' directory) is in sys.path
-# This allows importing modules from the project root, like bt_parser.py
-try:
-    project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
-    if project_root not in sys.path:
-        sys.path.insert(0, project_root)
-    print(f"--- Project root for imports (v3): {project_root} ---")
-    print(f"--- sys.path after modification: {sys.path} ---")
-    
-    from bt_parser import parse_statement # Removed Transaction import, not directly used here
-    print("--- Successfully imported parse_statement from bt_parser (v3) ---")
-    PARSER_AVAILABLE = True
-except ImportError as e:
-    print(f"--- CRITICAL: Failed to import from bt_parser (v3): {e} ---")
-    print(traceback.format_exc())
-    parse_statement = None
-    PARSER_AVAILABLE = False
+print("--- api/parse.py SIMPLIFIED module loaded (vercel-debug-v4) ---")
 
 class Handler(BaseHTTPRequestHandler):
     def _send_json_response(self, status_code, data_dict):
-        self.send_response(status_code)
-        self.send_header('Content-Type', 'application/json')
-        self.send_header('Access-Control-Allow-Origin', '*')
-        self.send_header('Access-Control-Allow-Methods', 'POST, OPTIONS')
-        self.send_header('Access-Control-Allow-Headers', 'Content-Type')
-        self.end_headers()
-        self.wfile.write(json.dumps(data_dict).encode('utf-8'))
+        try:
+            self.send_response(status_code)
+            self.send_header('Content-Type', 'application/json')
+            self.send_header('Access-Control-Allow-Origin', '*')
+            self.send_header('Access-Control-Allow-Methods', 'POST, OPTIONS')
+            self.send_header('Access-Control-Allow-Headers', 'Content-Type')
+            self.end_headers()
+            self.wfile.write(json.dumps(data_dict).encode('utf-8'))
+            print(f"--- SIMPLIFIED: Sent {status_code} with data: {data_dict} ---")
+        except Exception as e_send:
+            print(f"--- SIMPLIFIED: CRITICAL ERROR sending response: {e_send} ---")
+            print(traceback.format_exc())
+            # If sending response fails, not much else we can do here for the client
 
     def do_POST(self):
-        print("--- do_POST method in api/parse.py called (v3) ---")
-        
-        if not PARSER_AVAILABLE:
-            print("--- ERROR: bt_parser.parse_statement not available due to import error (v3). ---")
-            self._send_json_response(500, {
-                'error': "Server configuration error: Parser module failed to load.",
-                'trace': "ImportError for bt_parser. Check Vercel function logs."
-            })
-            return
-        
+        print("--- SIMPLIFIED: do_POST method in api/parse.py called (vercel-debug-v4) ---")
         try:
-            content_length = int(self.headers['Content-Length'])
-            post_data = self.rfile.read(content_length)
-            data = json.loads(post_data)
-            print("--- Received POST data (v3) ---")
+            content_length = int(self.headers.get('Content-Length', 0))
+            post_data_raw = "No data read"
+            if content_length > 0:
+                post_data_bytes = self.rfile.read(content_length)
+                post_data_raw = post_data_bytes.decode('utf-8', errors='replace') # Try to decode for logging
+                print(f"--- SIMPLIFIED: Received raw POST data (first 500 chars): {post_data_raw[:500]} ---")
+            else:
+                print("--- SIMPLIFIED: No Content-Length or it was 0. ---")
 
-            if 'file' not in data:
-                print("--- Error: 'file' key not in POST data (v3) ---")
-                self._send_json_response(400, {'error': "Missing 'file' in request body"})
-                return
-
-            pdf_bytes = base64.b64decode(data['file'])
-            print(f"--- Decoded PDF bytes, length: {len(pdf_bytes)} (v3) ---")
-
-            # Call the parser
-            txns = parse_statement(pdf_bytes) # This should return a list
+            # No parsing, just return a fixed success response
+            response_data = {
+                'message': 'Simplified API parse received POST',
+                'data_preview': post_data_raw[:100], # Send back a snippet of what was received
+                'transactions': [
+                    {
+                        'date': '2024-01-01T00:00:00Z',
+                        'description': 'Test from simplified Vercel endpoint',
+                        'vendor': 'Vercel Test',
+                        'amount': '100.00',
+                        'currency': 'RON',
+                        'debit': '100.00',
+                        'credit': '0',
+                        'amount_ron': '100.00',
+                        'rrn': 'SIMPLETEST'
+                    }
+                ]
+            }
+            self._send_json_response(200, response_data)
             
-            if txns is None: # Should not happen if bt_parser is robust, but good to check
-                print("--- WARNING: parse_statement returned None. Sending empty list. (v3) ---")
-                txns = []
-
-            print(f"--- parse_statement returned {len(txns)} transactions (v3) ---")
-            
-            # Prepare transactions for JSON response
-            txns_list_for_json = []
-            for t in txns:
-                txns_list_for_json.append({
-                    'date': t.date.isoformat(),
-                    'description': t.description,
-                    'vendor': t.vendor,
-                    'amount': str(t.amount),
-                    'currency': t.currency,
-                    'debit': str(t.debit),
-                    'credit': str(t.credit),
-                    'amount_ron': str(t.amount_ron) if t.amount_ron is not None else None,
-                    'rrn': t.rrn
+        except Exception as e_main:
+            print(f"--- SIMPLIFIED: ERROR in do_POST: {e_main} ---")
+            print(traceback.format_exc())
+            try:
+                self._send_json_response(500, {
+                    'error': f'Simplified API Error: {str(e_main)}',
+                    'trace': traceback.format_exc()
                 })
-            
-            self._send_json_response(200, {'transactions': txns_list_for_json})
-            print("--- Successfully sent 200 response with transactions (v3) ---")
-            
-        except json.JSONDecodeError as je:
-            error_message = f"JSON Decode Error: {str(je)}"
-            error_trace = traceback.format_exc()
-            print(f"--- ERROR in do_POST (v3): {error_message} ---")
-            print(error_trace)
-            self._send_json_response(400, {'error': error_message, 'trace': error_trace})
+            except Exception as e_final_error:
+                 print(f"--- SIMPLIFIED: CRITICAL ERROR sending error response: {e_final_error} ---")
+                 print(traceback.format_exc())
 
-        except base64.binascii.Error as b64e:
-            error_message = f"Base64 Decode Error: {str(b64e)}"
-            error_trace = traceback.format_exc()
-            print(f"--- ERROR in do_POST (v3): {error_message} ---")
-            print(error_trace)
-            self._send_json_response(400, {'error': error_message, 'trace': error_trace})
-
-        except Exception as e:
-            error_message = str(e)
-            error_trace = traceback.format_exc()
-            print(f"--- ERROR in do_POST (v3): {error_message} ---")
-            print(error_trace)
-            self._send_json_response(500, {'error': error_message, 'trace': error_trace})
-    
     def do_OPTIONS(self):
-        print("--- do_OPTIONS method in api/parse.py called (v3) ---")
-        self._send_json_response(200, {'message': 'OPTIONS request successful'})
-        print("--- Successfully sent 200 response for OPTIONS request (v3) ---") 
+        print("--- SIMPLIFIED: do_OPTIONS method in api/parse.py called (vercel-debug-v4) ---")
+        self._send_json_response(200, {'message': 'OPTIONS request successful for simplified API'}) 
