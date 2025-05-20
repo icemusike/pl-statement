@@ -1,0 +1,138 @@
+// This file is temporarily disabled to allow testing of the Python API endpoint.
+
+// Sample transaction data for testing purposes
+
+export const sampleTransactions = [
+  {
+    date: '2025-03-01T00:00:00.000Z',
+    description: 'ACHIZITIE POS MAGAZIN ALIMENTAR BUCURESTI TID:73120938 TERMINAL: ABC MARKET SRL',
+    vendor: 'ABC MARKET SRL',
+    amount: '150.00',
+    currency: 'RON',
+    debit: '150.00',
+    credit: '0',
+    amount_ron: '150.00',
+    rrn: '123456789'
+  },
+  {
+    date: '2025-03-02T00:00:00.000Z',
+    description: 'TRANSFER ONLINE CATRE FURNIZOR SERVICII SRL FACTURA 2025-123',
+    vendor: 'FURNIZOR SERVICII SRL',
+    amount: '2500.00',
+    currency: 'RON',
+    debit: '2500.00',
+    credit: '0',
+    amount_ron: '2500.00',
+    rrn: '987654321'
+  },
+  {
+    date: '2025-03-03T00:00:00.000Z',
+    description: 'INCASARE TRANSFER INTERN DE LA CLIENT FIDEL SRL CONTRACT 2025-001',
+    vendor: 'CLIENT FIDEL SRL',
+    amount: '3750.50',
+    currency: 'RON',
+    debit: '0',
+    credit: '3750.50',
+    amount_ron: '3750.50',
+    rrn: '456123789'
+  },
+  {
+    date: '2025-03-05T00:00:00.000Z',
+    description: 'COMISION ADMINISTRARE CONT LUNA MARTIE 2025',
+    vendor: 'BANCA TRANSILVANIA',
+    amount: '25.00',
+    currency: 'RON',
+    debit: '25.00',
+    credit: '0',
+    amount_ron: '25.00',
+    rrn: '789456123'
+  },
+  {
+    date: '2025-03-07T00:00:00.000Z',
+    description: 'PLATA CARD VISA UBER TRANSPORT BUCURESTI',
+    vendor: 'UBER',
+    amount: '35.00',
+    currency: 'RON',
+    debit: '35.00',
+    credit: '0',
+    amount_ron: '35.00',
+    rrn: '321654987'
+  },
+  {
+    date: '2025-03-10T00:00:00.000Z',
+    description: 'ACHIZITIE POS MAGAZIN IT TID:73189432 TERMINAL: TECH STORE SRL',
+    vendor: 'TECH STORE SRL',
+    amount: '4999.99',
+    currency: 'RON',
+    debit: '4999.99',
+    credit: '0',
+    amount_ron: '4999.99',
+    rrn: '555123789'
+  },
+  {
+    date: '2025-03-11T00:00:00.000Z',
+    description: 'RETRAGERE NUMERAR ATM TRANSILVANIA BUCURESTI',
+    vendor: 'ATM TRANSILVANIA',
+    amount: '1000.00',
+    currency: 'RON',
+    debit: '1000.00',
+    credit: '0',
+    amount_ron: '1000.00',
+    rrn: '777888999'
+  },
+  {
+    date: '2025-03-15T00:00:00.000Z',
+    description: 'INCASARE TRANSFER INTERN DE LA PARTENER PROIECT SRL CONTRACT 2025-XYZ',
+    vendor: 'PARTENER PROIECT SRL',
+    amount: '12500.00',
+    currency: 'RON',
+    debit: '0',
+    credit: '12500.00',
+    amount_ron: '12500.00',
+    rrn: '123987456'
+  },
+  {
+    date: '2025-03-18T00:00:00.000Z',
+    description: 'PLATA FACTURA ENERGIE ELECTRICA MARTIE 2025',
+    vendor: 'COMPANIA DE ENERGIE',
+    amount: '350.75',
+    currency: 'RON',
+    debit: '350.75',
+    credit: '0',
+    amount_ron: '350.75',
+    rrn: '951753852'
+  },
+  {
+    date: '2025-03-20T00:00:00.000Z',
+    description: 'PLATA ONLINE ABONAMENT SERVICII CLOUD',
+    vendor: 'CLOUD SERVICES CO',
+    amount: '75.99',
+    currency: 'EUR',
+    debit: '75.99',
+    credit: '0',
+    amount_ron: '378.25',
+    rrn: '369258147'
+  },
+  {
+    date: '2025-03-25T00:00:00.000Z',
+    description: 'ALIMENTARE CONT NUMERAR AGENTIE TRANSILVANIA FLOREASCA',
+    vendor: 'BANCA TRANSILVANIA',
+    amount: '5000.00',
+    currency: 'RON',
+    debit: '0',
+    credit: '5000.00',
+    amount_ron: '5000.00',
+    rrn: '741852963'
+  },
+  {
+    date: '2025-03-28T00:00:00.000Z',
+    description: 'PLATA SALARIU ANGAJAT POPESCU ION MARTIE 2025',
+    vendor: 'POPESCU ION',
+    amount: '4500.00',
+    currency: 'RON',
+    debit: '4500.00',
+    credit: '0',
+    amount_ron: '4500.00',
+    rrn: '852963741'
+  }
+]; 

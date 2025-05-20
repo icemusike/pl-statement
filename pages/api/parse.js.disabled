@@ -1,0 +1,28 @@
+// This file is temporarily disabled to allow testing of the Python API endpoint.
+// Next.js API route for PDF parsing
+// This is a JavaScript fallback for the Python serverless function
+
+import { sampleTransactions } from './sample-data';
+
+export default async function handler(req, res) {
+  try {
+    if (req.method !== 'POST') {
+      return res.status(405).json({ error: 'Method not allowed' });
+    }
+
+    // Log the request to debug
+    console.log('Received PDF parse request');
+    
+    // Check if we have file data
+    if (!req.body || !req.body.file) {
+      return res.status(400).json({ error: 'Missing file data' });
+    }
+
+    // Return sample data
+    res.status(200).json({ transactions: sampleTransactions });
+    
+  } catch (error) {
+    console.error('Error processing PDF:', error);
+    res.status(500).json({ error: 'Failed to process PDF: ' + error.message });
+  }
+} 
