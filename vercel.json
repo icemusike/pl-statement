@@ -2,13 +2,13 @@
   "version": 2,
   "builds": [
     {
-      "src": "package.json",
-      "use": "@vercel/next"
-    },
-    {
       "src": "api/**/*.py",
       "use": "@vercel/python",
       "config": { "pythonVersion": "3.9" }
+    },
+    {
+      "src": "package.json",
+      "use": "@vercel/next"
     }
   ],
   "routes": [
@@ -20,5 +20,11 @@
       "src": "/(.*)",
       "dest": "/$1"
     }
-  ]
+  ],
+  "functions": {
+    "api/parse.py": {
+      "memory": 1024,
+      "maxDuration": 15
+    }
+  }
 } 
